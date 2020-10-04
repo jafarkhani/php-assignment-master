@@ -1,0 +1,50 @@
+[
+  {
+    "_id": {
+      "$oid": "581c9dd857f72e3cbbd02b64"
+    },
+    "country": "CZ",
+    "city": "Brno",
+    "street": "Husova",
+    "postalcode": "60200",
+    "number": 6,
+    "numberAddition": "",
+    "createdAt": "2016-11-04T10:00:00Z",
+    "updatedAt": "2016-11-04T10:00:00Z",
+    "status": "",
+    "name": "SalesChamp",
+    "email": ""
+  },
+  {
+    "_id": {
+      "$oid": "581c9dd857f72e3cbbd02b65"
+    },
+    "country": "CZ",
+    "city": "Brno",
+    "street": "Husova",
+    "postalcode": "60200",
+    "number": 13,
+    "numberAddition": "",
+    "createdAt": "2016-11-04T10:00:00Z",
+    "updatedAt": "2016-11-04T10:00:00Z",
+    "status": "",
+    "name": "Proč ne? Bistro",
+    "email": ""
+  },
+  {
+    "_id": {
+      "$oid": "581c9dd857f72e3cbbd02b66"
+    },
+    "country": "CZ",
+    "city": "Brno",
+    "street": "Husova",
+    "postalcode": "60200",
+    "number": 13,
+    "numberAddition": "355",
+    "createdAt": "2016-11-04T10:00:00Z",
+    "updatedAt": "2016-11-04T10:00:00Z",
+    "status": "",
+    "name": "Restaurace Pod Špilberkem",
+    "email": ""
+  }
+]

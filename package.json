@@ -1,0 +1,16 @@
+{
+  "name": "php-assignment",
+  "version": "1.0.0",
+  "repository": "git@github.com:SalesChamp/php-assignment.git",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "newman": "^3.9.3"
+  },
+  "scripts": {
+    "test": "newman run tests-postman.json"
+  },
+  "engines": {
+    "node": ">= 8.9"
+  }
+}

@@ -1,0 +1,965 @@
+{
+	"info": {
+		"_postman_id": "059d79dd-a2e2-4209-b55e-6f5f28b55270",
+		"name": "PHP assignment tests",
+		"description": "Basic set of requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Valid with basic arguments",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4ce08086-7986-4397-b67c-94a098e52750",
+						"type": "text/javascript",
+						"exec": [
+							"var response;",
+							"try {",
+							"    response = JSON.parse(responseBody || '{}');",
+							"} catch (e) {",
+							"    tests['Response is JSON'] = false;",
+							"    response = {};",
+							"}",
+							"",
+							"tests['Response code'] = responseCode['code'] === 201;",
+							"tests['Response content type'] = postman.getResponseHeader('content-type').match(/^application\\/json/);",
+							"",
+							"pm.environment.set(\"addressId\", response.id);",
+							"",
+							"tests['Default name created'] = Object.has(response, 'name');",
+							"tests['Default email created'] = Object.has(response, 'email');",
+							"tests['Default status created'] = Object.has(response, 'status');",
+							"",
+							"tests['Default name value'] = response.name === null;",
+							"tests['Default email value'] = response.email === null;",
+							"tests['Default status value'] = response.status === null;",
+							"",
+							"tests['Default createdAt created'] = Object.has(response, 'createdAt');",
+							"tests['Default updatedAt created'] = Object.has(response, 'updatedAt');",
+							"tests['Generated createdAt value'] = _.isFinite((new Date(response.createdAt)).getTime());",
+							"tests['Generated updatedAt value'] = _.isFinite((new Date(response.updatedAt)).getTime());",
+							"",
+							"tests['Explicit country value created'] = Object.has(response, 'country');",
+							"tests['Explicit city value created'] = Object.has(response, 'city');",
+							"tests['Explicit street value created'] = Object.has(response, 'street');",
+							"tests['Explicit postalcode value created'] = Object.has(response, 'postalcode');",
+							"tests['Explicit number value created'] = Object.has(response, 'number');",
+							"tests['Explicit numberAddition value created'] = Object.has(response, 'numberAddition');",
+							"",
+							"tests['Explicit country value'] = response.country === 'CZ';",
+							"tests['Explicit city value'] = response.city === 'Brno';",
+							"tests['Explicit street value'] = response.street === 'Špilberk';",
+							"tests['Explicit postalcode value'] = response.postalcode === '66224';",
+							"tests['Explicit number value'] = response.number === 210;",
+							"tests['Explicit numberAddition value'] = response.numberAddition === '1';"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"country\": \"CZ\",\n\t\"city\": \"Brno\",\n\t\"street\": \"Špilberk\",\n\t\"postalcode\": \"66224\",\n\t\"number\": 210,\n\t\"numberAddition\": \"1\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/address",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid with all arguments",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a9fa4368-cb07-4fc2-bf19-3061e8ca5c97",
+						"type": "text/javascript",
+						"exec": [
+							"var response;",
+							"try {",
+							"    response = JSON.parse(responseBody || '{}');",
+							"} catch (e) {",
+							"    tests['Response is JSON'] = false;",
+							"    response = {};",
+							"}",
+							"",
+							"",
+							"",
+							"tests['Response code'] = responseCode['code'] === 422;",
+							"tests['Response content type'] = postman.getResponseHeader('content-type').match(/^application\\/json/);",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"country\": \"CZ\",\n\t\"city\": \"Brno\",\n\t\"street\": \"Špilberk\",\n\t\"postalcode\": \"66224\",\n\t\"number\": 210,\n\t\"numberAddition\": \"1\",\n\t\"status\": \"not at home\",\n\t\"name\": \"Frank\",\n\t\"email\": \"frank@burns.gov\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/address",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid malformed request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var response;",
+							"try {",
+							"    response = JSON.parse(responseBody || '{}');",
+							"} catch (e) {",
+							"    tests['Response is JSON'] = false;",
+							"    response = {};",
+							"}",
+							"",
+							"tests['Response code'] = responseCode['code'] === 415;",
+							"tests['Response content type'] = postman.getResponseHeader('content-type').match(/^application\\/json/);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"country\": \"CZ\",\n\t\"city\": \"Brno\",\n\t\"street\": \"Špilberk\",\n\t\"postalcode\": \"66224\",\n\t\"number\": 210,\n\t\"numberAddition\": \"1\""
+				},
+				"url": {
+					"raw": "{{host}}/address",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid empty country",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var response;",
+							"try {",
+							"    response = JSON.parse(responseBody || '{}');",
+							"} catch (e) {",
+							"    tests['Response is JSON'] = false;",
+							"    response = {};",
+							"}",
+							"",
+							"tests['Response code'] = responseCode['code'] === 422;",
+							"tests['Response content type'] = postman.getResponseHeader('content-type').match(/^application\\/json/);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"country\": \"\",\n\t\"city\": \"Brno\",\n\t\"street\": \"Špilberk\",\n\t\"postalcode\": \"66224\",\n\t\"number\": 210,\n\t\"numberAddition\": \"1\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/address",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid empty city",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var response;",
+							"try {",
+							"    response = JSON.parse(responseBody || '{}');",
+							"} catch (e) {",
+							"    tests['Response is JSON'] = false;",
+							"    response = {};",
+							"}",
+							"",
+							"tests['Response code'] = responseCode['code'] === 422;",
+							"tests['Response content type'] = postman.getResponseHeader('content-type').match(/^application\\/json/);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"country\": \"CZ\",\n\t\"city\": \"\",\n\t\"street\": \"Špilberk\",\n\t\"postalcode\": \"66224\",\n\t\"number\": 210,\n\t\"numberAddition\": \"1\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/address",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid empty street",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var response;",
+							"try {",
+							"    response = JSON.parse(responseBody || '{}');",
+							"} catch (e) {",
+							"    tests['Response is JSON'] = false;",
+							"    response = {};",
+							"}",
+							"",
+							"tests['Response code'] = responseCode['code'] === 422;",
+							"tests['Response content type'] = postman.getResponseHeader('content-type').match(/^application\\/json/);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"country\": \"CZ\",\n\t\"city\": \"Brno\",\n\t\"street\": \"\",\n\t\"postalcode\": \"66224\",\n\t\"number\": 210,\n\t\"numberAddition\": \"1\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/address",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid postalcode",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var response;",
+							"try {",
+							"    response = JSON.parse(responseBody || '{}');",
+							"} catch (e) {",
+							"    tests['Response is JSON'] = false;",
+							"    response = {};",
+							"}",
+							"",
+							"tests['Response code'] = responseCode['code'] === 422;",
+							"tests['Response content type'] = postman.getResponseHeader('content-type').match(/^application\\/json/);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"country\": \"CZ\",\n\t\"city\": \"Brno\",\n\t\"street\": \"Husova\",\n\t\"postalcode\": \"66224foobar\",\n\t\"number\": 210,\n\t\"numberAddition\": \"1\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/address",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Valid for all addresses",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var response;",
+							"try {",
+							"    response = JSON.parse(responseBody || '{}');",
+							"} catch (e) {",
+							"    tests['Response is JSON'] = false;",
+							"    response = {};",
+							"}",
+							"",
+							"tests['Response code'] = responseCode['code'] === 200;",
+							"tests['Response content type'] = postman.getResponseHeader('content-type').match(/^application\\/json/);",
+							"",
+							"tests['Response is an array'] = _.isArray(response);",
+							"tests['Response is non-empty array'] = response.length > 0;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"country\": \"CZ\",\n\t\"city\": \"Brno\",\n\t\"street\": \"Špilberk\",\n\t\"postalcode\": \"66224\",\n\t\"number\": 210,\n\t\"numberAddition\": \"1\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/address",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Valid for specific address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "05a57688-fc0c-4afe-a64a-37e76ce4ac64",
+						"type": "text/javascript",
+						"exec": [
+							"var response;",
+							"try {",
+							"    response = JSON.parse(responseBody || '{}');",
+							"} catch (e) {",
+							"    tests['Response is JSON'] = false;",
+							"    response = {};",
+							"}",
+							"",
+							"tests['Response code'] = responseCode['code'] === 200;",
+							"tests['Response content type'] = postman.getResponseHeader('content-type').match(/^application\\/json/);",
+							"",
+							"tests['Response is an array'] = _.isPlainObject(response);",
+							"",
+							"tests['country exists'] = Object.has(response, 'country');",
+							"tests['city exists'] = Object.has(response, 'city');",
+							"tests['street exists'] = Object.has(response, 'street');",
+							"tests['postalcode exists'] = Object.has(response, 'postalcode');",
+							"tests['number exists'] = Object.has(response, 'number');",
+							"tests['numberAddition exists'] = Object.has(response, 'numberAddition');",
+							"tests['createdAt exitsts'] = Object.has(response, 'createdAt');",
+							"tests['updatedAt exitsts'] = Object.has(response, 'updatedAt');",
+							"tests['status exitsts'] = Object.has(response, 'status');",
+							"tests['name exitsts'] = Object.has(response, 'name');",
+							"tests['email exitsts'] = Object.has(response, 'email');",
+							"",
+							"tests['country value'] = _.isString(response.country);",
+							"tests['city value'] = _.isString(response.city);",
+							"tests['street value'] = _.isString(response.street);",
+							"tests['postalcode value'] = _.isString(response.postalcode);",
+							"tests['number value'] = _.isNumber(response.number);",
+							"tests['numberAddition value'] = _.isString(response.numberAddition);",
+							"tests['createdAt value'] = _.isFinite((new Date(response.createdAt)).getTime());",
+							"tests['updatedAt value'] = _.isFinite((new Date(response.updatedAt)).getTime());",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"country\": \"CZ\",\n\t\"city\": \"Brno\",\n\t\"street\": \"Špilberk\",\n\t\"postalcode\": \"66224\",\n\t\"number\": 210,\n\t\"numberAddition\": \"1\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/address/{{addressId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address",
+						"{{addressId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid when address doesn't exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var response;",
+							"try {",
+							"    response = JSON.parse(responseBody || '{}');",
+							"} catch (e) {",
+							"    tests['Response is JSON'] = false;",
+							"    response = {};",
+							"}",
+							"",
+							"tests['Response code'] = responseCode['code'] === 404;",
+							"tests['Response content type'] = postman.getResponseHeader('content-type').match(/^application\\/json/);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"country\": \"CZ\",\n\t\"city\": \"Brno\",\n\t\"street\": \"Špilberk\",\n\t\"postalcode\": \"66224\",\n\t\"number\": 210,\n\t\"numberAddition\": \"1\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/address/404",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address",
+						"404"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid with invalid email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "00a7ece8-fde6-4791-a567-d60fcf58021b",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test('Response code', () => {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test('Response content type', () => {",
+							"    pm.response.to.be.json;",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"status\": \"interested\",\n\t\"email\": \"foobar\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/address/{{addressId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address",
+						"{{addressId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid malformed request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b23a8290-ed51-4819-844c-c324410719db",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test('Response code', () => {",
+							"    pm.response.to.have.status(415);",
+							"});",
+							"",
+							"pm.test('Response content type', () => {",
+							"    pm.response.to.be.json;",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Bobby\""
+				},
+				"url": {
+					"raw": "{{host}}/address/{{addressId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address",
+						"{{addressId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Valid with final status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "83500c11-e68e-4953-8728-0c3a42b10e13",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test('Response code', () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Response content type', () => {",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test('Explicit values', () => {",
+							"    let response = pm.response.json();",
+							"    ",
+							"    pm.expect(response.name).to.eql('Frank');",
+							"    pm.expect(response.email).to.eql('frank@burns.gov');",
+							"    pm.expect(response.status).to.eql('interested');",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"status\": \"interested\",\n\t\"name\": \"Frank\",\n\t\"email\": \"frank@burns.gov\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/address/{{addressId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address",
+						"{{addressId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid with final status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "50e347e5-f161-4fb2-976f-dde37e88e5dc",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test('Response code', () => {",
+							"    pm.response.to.have.status(403);",
+							"});",
+							"",
+							"pm.test('Response content type', () => {",
+							"    pm.response.to.be.json;",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"status\": \"not at home\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/address/{{addressId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address",
+						"{{addressId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid when address does not exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "be69fd4c-f573-4404-8928-051edbbd4227",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test('Response code', () => {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test('Response content type', () => {",
+							"    pm.response.to.be.json;",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"status\": \"interested\",\n\t\"email\": \"frank@burns.gov\",\n\t\"name\": \"Frank Burns\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/address/404",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address",
+						"404"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d0fa3025-a2ad-4142-97e1-cbfab3831b44",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test('Response code', () => {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/address/{{addressId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address",
+						"{{addressId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid when address doesn't exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0a3179d0-8f67-4122-bbe7-c88678520c1b",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test('Response code', () => {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test('Response content type', () => {",
+							"    pm.response.to.be.json;",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/address/581c9dd857f72e3cbbd02b64",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"address",
+						"581c9dd857f72e3cbbd02b64"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "a58c664c-1f2e-4f62-ba54-ef8922089a04",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "610e5e6e-0052-4699-b2c5-50efebd7b67a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "57a97173-47b1-487e-8480-c925df866113",
+			"key": "host",
+			"value": "http://localhost:8080",
+			"type": "string",
+			"description": ""
+		},
+		{
+			"id": "f6c91d51-105c-4ac0-9d11-90aff0db8f59",
+			"key": "addressId",
+			"value": "",
+			"type": "string",
+			"description": ""
+		}
+	]
+}
